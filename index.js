@@ -7,6 +7,8 @@ const bcrypt=require("bcryptjs");
 const jwt=require("jsonwebtoken");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 
 DBConnection(); //called
 
@@ -17,10 +19,11 @@ app.get("/", (req,res) => {
 app.post("/register", async (req,res) => {   //post needs input from frontend
   try {
     // get all the data from the frontend
-  const {firstname, lastname, email, password} = req.body;
+    console.log("req: ",req);
+  const {firstName, lastName, email, password} = req.body;
   
   //check that all the data should exists
-  if(!(firstname && lastname && email && password)){  // whether user has provided with the information or not
+  if(!(firstName && lastName && email && password)){  // whether user has provided with the information or not
     return res.status(400).send("Please enter all the information");
   }
 
@@ -35,8 +38,8 @@ app.post("/register", async (req,res) => {   //post needs input from frontend
 
   //save user in the db
   const user= await User.create({
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     email,
     password: hashedPassword,
   });
